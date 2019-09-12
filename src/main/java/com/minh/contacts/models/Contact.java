@@ -6,6 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -26,4 +29,7 @@ public class Contact {
     private String email;
 
     private String mobilePhoneNumber;
+
+    @ManyToMany
+    private Set<Skill> skills = new HashSet<>();
 }
