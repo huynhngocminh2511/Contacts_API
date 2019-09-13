@@ -2,6 +2,7 @@ package com.minh.contacts.services;
 
 import com.minh.contacts.configurations.TokenProvider;
 import com.minh.contacts.exceptions.AccessDeniedException;
+import com.minh.contacts.exceptions.BadRequestException;
 import com.minh.contacts.exceptions.EmailExistedException;
 import com.minh.contacts.exceptions.EntityNotFoundException;
 import com.minh.contacts.mappers.ContactMapper;
@@ -71,6 +72,12 @@ public class ContactService {
     }
 
     public TokenResponse login(LoginRequest loginRequest) {
+        Contact contact = contactRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new EntityNotFoundException("Contact is not found"));
+
+        if (!contactRepository.existsByEmail(loginRequest.getEmail()) || !new BCryptPasswordEncoder().matches(loginRequest.getPassword(), contact.getPassword())) {
+            throw new BadRequestException("Email or password is wrong");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),

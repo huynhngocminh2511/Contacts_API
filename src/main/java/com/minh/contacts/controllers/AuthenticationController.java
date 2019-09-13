@@ -21,7 +21,7 @@ public class AuthenticationController {
     private ContactService contactService;
 
     @PostMapping("login")
-    public TokenResponse login(@RequestBody LoginRequest loginRequest) {
+    public TokenResponse login(@Valid @RequestBody LoginRequest loginRequest) {
         return contactService.login(loginRequest);
     }
 
