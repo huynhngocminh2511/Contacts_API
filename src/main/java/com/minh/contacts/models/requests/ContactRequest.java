@@ -30,4 +30,7 @@ public class ContactRequest {
     private String mobilePhoneNumber;
 
     private Set<Long> skillIds = new HashSet<>();
+
+    @NotBlank(message = "Password is mandatory")
+    private String password;
 }

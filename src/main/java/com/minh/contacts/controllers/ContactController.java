@@ -3,6 +3,7 @@ package com.minh.contacts.controllers;
 import com.minh.contacts.exceptions.EntityNotFoundException;
 import com.minh.contacts.models.Contact;
 import com.minh.contacts.models.requests.ContactRequest;
+import com.minh.contacts.models.responses.ContactResponse;
 import com.minh.contacts.repositories.ContactRepository;
 import com.minh.contacts.services.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +27,22 @@ public class ContactController {
     private ContactService contactService;
 
     @GetMapping
-    public List<Contact> getAll() {
+    public List<ContactResponse> getAll() {
         return contactService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Contact get(@PathVariable Long id) {
+    public ContactResponse get(@PathVariable Long id) {
         return contactService.get(id);
     }
 
     @PostMapping()
-    public Contact create(@Valid @RequestBody ContactRequest contactRequest) {
+    public ContactResponse create(@Valid @RequestBody ContactRequest contactRequest) {
         return contactService.create(contactRequest);
     }
 
     @PutMapping("/{id}")
-    public Contact update(@PathVariable Long id, @Valid @RequestBody ContactRequest contactRequest) {
+    public ContactResponse update(@PathVariable Long id, @Valid @RequestBody ContactRequest contactRequest) {
         return contactService.update(id, contactRequest);
     }
 
