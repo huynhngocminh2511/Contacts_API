@@ -61,7 +61,7 @@ public class DataSeedingListener implements ApplicationListener<ContextRefreshed
         addRoleIfMissing(RoleEnum.USER.getName());
         addRoleIfMissing(RoleEnum.ADMIN.getName());
 
-        addUserIfMissing("user@gmail.com", "user", RoleEnum.USER.getName());
+        addUserIfMissing("user@gmail.com", "admin", RoleEnum.USER.getName());
         addUserIfMissing("admin@gmail.com", "admin", RoleEnum.USER.getName(), RoleEnum.ADMIN.getName());
 
         if(signingKey == null || signingKey.length() ==0){
