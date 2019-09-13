@@ -20,11 +20,15 @@ Create database mysql have name is "contacts".
 Edit spring.datasource.username and spring.datasource.password to connect database.
 Using Intellij Idea to open project Contacts-API and run project.
 
+### After run project to view swagger:
+swagger-ui:http://localhost:8080/swagger-ui.html
+swagger-api-docs:http://localhost:8080/v2/api-docs
+
 ### Note   
 Users:
 * administrator
-  > User: admin@gmail.com  
+  > Email: admin@gmail.com
   > Password: admin
 * user:  
-  > User: user@gmail.com  
+  > Email: user@gmail.com
   > Password: admin  
