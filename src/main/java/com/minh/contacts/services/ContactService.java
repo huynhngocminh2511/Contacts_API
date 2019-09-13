@@ -1,19 +1,22 @@
 package com.minh.contacts.services;
 
 import com.minh.contacts.configurations.TokenProvider;
+import com.minh.contacts.exceptions.AccessDeniedException;
 import com.minh.contacts.exceptions.EmailExistedException;
 import com.minh.contacts.exceptions.EntityNotFoundException;
 import com.minh.contacts.mappers.ContactMapper;
 import com.minh.contacts.mappers.SkillMapper;
 import com.minh.contacts.models.Contact;
 import com.minh.contacts.models.Skill;
+import com.minh.contacts.models.enums.RoleEnum;
 import com.minh.contacts.models.requests.ContactRequest;
+import com.minh.contacts.models.requests.ContactUpdateRequest;
 import com.minh.contacts.models.requests.LoginRequest;
 import com.minh.contacts.models.responses.ContactResponse;
 import com.minh.contacts.models.responses.TokenResponse;
 import com.minh.contacts.repositories.ContactRepository;
+import com.minh.contacts.repositories.RoleRepository;
 import com.minh.contacts.repositories.SkillRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +37,9 @@ public class ContactService {
 
     @Autowired
     private SkillRepository skillRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private ContactMapper contactMapper;
@@ -99,23 +105,30 @@ public class ContactService {
 
         contact.setPassword(new BCryptPasswordEncoder().encode(contactRequest.getPassword()));
 
-        Set<Skill> skills = mapToSkill(contactRequest.getSkillIds());
-
-        contact.setSkills(skills);
+        contact.setSkills(mapToSkill(contactRequest.getSkillIds()));
 
         return mapToContactResponse(contactRepository.save(contact));
     }
 
-    public ContactResponse update(Long id, ContactRequest contactRequest) {
-        getById(id);
+    public ContactResponse update(Long id, ContactUpdateRequest contactUpdateRequest) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Contact contact = contactMapper.mapToContact(contactRequest);
+        Contact currentContact = contactRepository.findByEmail(authentication.getName()).orElseThrow(() -> new EntityNotFoundException("Contact is not found"));
+        Contact contact = getById(id);
 
-        contact.setId(id);
+        if (!currentContact.equals(contact) && !currentContact.getRoles().contains(roleRepository.findByName(RoleEnum.ADMIN.getName()))) {
+            throw new AccessDeniedException("Users can only change their profile ");
+        }
 
-        Set<Skill> skills = mapToSkill(contactRequest.getSkillIds());
+        contact.setFirstName(contactUpdateRequest.getFirstName());
+        contact.setLastName(contactUpdateRequest.getLastName());
+        contact.setFullName(contactUpdateRequest.getFullName());
+        contact.setMobilePhoneNumber(contactUpdateRequest.getMobilePhoneNumber());
+        contact.setAddress(contactUpdateRequest.getAddress());
 
-        contact.setSkills(skills);
+        contact.setPassword(new BCryptPasswordEncoder().encode(contactUpdateRequest.getPassword()));
+
+        contact.setSkills(mapToSkill(contactUpdateRequest.getSkillIds()));
 
         return mapToContactResponse(contactRepository.save(contact));
     }

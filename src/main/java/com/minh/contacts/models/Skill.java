@@ -29,7 +29,4 @@ public class Skill {
     private String name;
 
     private String level;
-
-    @ManyToMany(mappedBy = "skills")
-    private Set<Contact> contacts = new HashSet<>();
 }
