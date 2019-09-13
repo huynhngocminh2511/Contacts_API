@@ -1,5 +1,6 @@
 package com.minh.contacts.configurations;
 
+import com.minh.contacts.exceptions.UnauthorizedException;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,14 +39,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             authToken = header.replace(TOKEN_PREFIX,"");
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
-            } catch (IllegalArgumentException e) {
-                logger.error("an error occured during getting username from token", e);
-            } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+            } catch (Exception e) {
+                res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             }
 
-        } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
