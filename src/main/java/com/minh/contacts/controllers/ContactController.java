@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,12 +36,12 @@ public class ContactController {
     }
 
     @PostMapping()
-    public Contact create(@RequestBody ContactRequest contactRequest) {
+    public Contact create(@Valid @RequestBody ContactRequest contactRequest) {
         return contactService.create(contactRequest);
     }
 
     @PutMapping("/{id}")
-    public Contact update(@PathVariable Long id, @RequestBody ContactRequest contactRequest) {
+    public Contact update(@PathVariable Long id, @Valid @RequestBody ContactRequest contactRequest) {
         return contactService.update(id, contactRequest);
     }
 

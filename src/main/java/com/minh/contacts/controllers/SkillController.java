@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,12 +34,12 @@ public class SkillController {
     }
 
     @PostMapping
-    public Skill create(@RequestBody SkillRequest skillRequest) {
+    public Skill create(@Valid @RequestBody SkillRequest skillRequest) {
         return skillService.create(skillRequest);
     }
 
     @PutMapping("/{id}")
-    public Skill update(@PathVariable Long id, @RequestBody SkillRequest skillRequest) {
+    public Skill update(@PathVariable Long id, @Valid @RequestBody SkillRequest skillRequest) {
         return skillService.update(id, skillRequest);
     }
 
