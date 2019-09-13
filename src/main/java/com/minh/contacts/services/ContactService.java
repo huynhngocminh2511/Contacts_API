@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class ContactService {
 
     @Autowired
@@ -57,7 +56,7 @@ public class ContactService {
     }
 
     public Contact update(Long id, ContactRequest contactRequest) {
-        get(id);
+        getById(id);
 
         Contact contact = contactMapper.mapToContact(contactRequest);
 
